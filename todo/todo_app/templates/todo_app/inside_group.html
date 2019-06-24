@@ -1,0 +1,75 @@
+I'm {{ request.user.username }}
+<h1>
+  You are inside "{{ todo_group.group_name }}".
+</h1>
+    This group is "{{ todo_group.group_type }}".
+<h1>Posts</h1>
+  <ul>
+    {% if todo_post_list %}
+      {% for todo_post in todo_post_list %}
+        <li><h2>{{ todo_post.post_text }}</h2>
+            <p>{{ todo_post.add_date }} {{ todo_post.owner }}</p>
+            {% if todo_post.id in edit_perm %}
+              <form action="{% url 'todo_app:todo_edit_post' pk=todo_post.pk passed_group_id=passed_group_id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Edit">
+              </form>
+            {% endif %}
+            {% if todo_post.id in del_perm %}
+              <form action="{% url 'todo_app:del_view' pk=todo_post.pk passed_group_id=passed_group_id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Delete">
+              </form>
+            {% endif %}
+            <form action="{% url 'todo_app:todo_inside_post' pk=todo_post.pk %}" method="get">
+              {% csrf_token %}
+              <input type="submit" value="Enter Post">
+            </form>
+        </li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+
+<p>Add Item:
+  <form action="{% url 'todo_app:add_view' passed_group_id=passed_group_id %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Add">
+  </form>
+</p>
+
+<p>
+  <form action="{% url 'todo_app:todo_list_user' passed_group_id=passed_group_id %}" method="get">
+    {% csrf_token %}
+    <input type="submit" value="View Users">
+  </form>
+</p>
+
+<p>
+  {% if can_delete_group %}
+    <form action="{% url 'todo_app:todo_delete_group' pk=passed_group_id %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Delete Group">
+    </form>
+  {% endif %}
+</p>
+
+<p>
+  <form action="{% url 'todo_app:todo_logout' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Logout">
+  </form>
+</p>
+
+<p>
+  <form action="{% url 'todo_app:todo_change_pass' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Change Password">
+  </form>
+</p>
+
+<p>
+  <form action="{% url 'todo_app:todo_display_group' %}" method="get">
+    {% csrf_token %}
+    <input type="submit" value="View Groups" >
+  </form>
+</p>

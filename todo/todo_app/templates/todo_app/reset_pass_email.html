@@ -1,0 +1,2 @@
+Someone asked for password reset for email {{ email }}. Follow the link below:
+{{ protocol}}://{{ domain }}{% url 'todo_app:todo_confirm_pass' uidb64=uid token=token %}

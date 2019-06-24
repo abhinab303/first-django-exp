@@ -1,0 +1,61 @@
+I'm {{ request.user.username }}
+
+<h1>My posts:</h1>
+{% if todo_post_list %}
+  <ul>
+    {%for todo_post in todo_post_list%}
+      <li>
+        <p>{{todo_post.post_text}}</p>
+        <p>{{todo_post.add_date}}</p>
+        <p>{{todo_post.post_group}}</p>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>You do not have any post.</p>
+{% endif %}
+
+<h1>My Groups:</h1>
+{% if user_groups_list %}
+  <ul>
+    {% for user_group in user_groups_list %}
+      <li>
+        <p>{{ user_group.group_name }}</p>
+        <form action="{% url 'todo_app:todo_enter_group' passed_group_id=user_group.id %}" method="get">
+          {% csrf_token %}
+          <input type="submit" value="Enter">
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>You do not own any groups.</p>
+{% endif %}
+
+<p>
+  <form action="{% url 'todo_app:todo_logout' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Logout">
+  </form>
+</p>
+
+<p>
+  <form action="{% url 'todo_app:todo_change_pass' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Change Password">
+  </form>
+</p>
+
+<p>
+  <form action="{% url 'todo_app:todo_display_group' %}" method="get">
+    {% csrf_token %}
+    <input type="submit" value="View Groups" >
+  </form>
+</p>
+
+<p>
+  <form action="{% url 'todo_app:todo_display_msg' %}" method="get">
+    {% csrf_token %}
+    <input type="submit" value="View messages" >
+  </form>
+</p>

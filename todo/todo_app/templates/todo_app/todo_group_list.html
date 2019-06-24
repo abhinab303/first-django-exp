@@ -1,0 +1,43 @@
+I'm {{ request.user.username }}
+<p>Create a Group:
+  <form action="{% url 'todo_app:todo_create_group' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Create">
+  </form>
+</p>
+
+<ul>
+  {% if todo_group_list %}
+    {% for todo_group in todo_group_list %}
+      <li>
+        {{ todo_group.group_name }}
+        {% if not todo_group in user_groups_list %}
+        <!-- this group does not incudle the user -->
+          {% if todo_group.group_type == 'FREE' %}
+            <form action="{% url 'todo_app:todo_join_group' passed_group_id=todo_group.id %}" method="post">
+              {% csrf_token %}
+              <input type="submit" value="Join">
+            </form>
+          {% elif not todo_group in user_msg_group_list and todo_group.group_type != 'CLOSED' %}
+          <!-- the user has not sent a request to join the group -->
+          <!-- and it is not a closed group, then user can request to join-->
+            <form action="{% url 'todo_app:todo_req_group' passed_group_id=todo_group.id %}" method="post">
+              {% csrf_token %}
+              <input type="submit" value="Request Join">
+            </form>
+          {% elif todo_group.group_type != 'CLOSED'  %}
+          <!-- user has already sent the message, so they need to wait -->
+            <p>Request Sent. Waiting for response.</p>
+          {% endif %}
+        {% else %}
+        <!-- if user has already joined the group -->
+          <form action="{% url 'todo_app:todo_enter_group' passed_group_id=todo_group.id %}" method="get">
+            {% csrf_token %}
+            <input type="submit" value="Enter">
+          </form>
+        {% endif %}
+      </li>
+
+    {% endfor %}
+  {% endif %}
+</ul>

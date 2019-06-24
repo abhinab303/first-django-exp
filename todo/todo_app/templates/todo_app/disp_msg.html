@@ -1,0 +1,32 @@
+I'm {{ request.user.username }}
+<h1>Posts</h1>
+  <ul>
+    {% if todo_msg_list %}
+      {% for todo_msg in todo_msg_list %}
+        <li>
+          <p>User {{ todo_msg.msg_from_user_id }} wants to join group {{ todo_msg.msg_group.group_name }} </p>
+          <p>{{ todo_msg.msg_text }}</p>
+          <form action="{% url 'todo_app:todo_accept_req' pk=todo_msg.pk %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Accept">
+          </form>
+        </li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+
+
+
+<p>
+  <form action="{% url 'todo_app:todo_logout' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Logout">
+  </form>
+</p>
+
+<p>
+  <form action="{% url 'todo_app:todo_display_group' %}" method="get">
+    {% csrf_token %}
+    <input type="submit" value="View Groups" >
+  </form>
+</p>

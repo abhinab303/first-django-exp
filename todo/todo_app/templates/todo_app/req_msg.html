@@ -1,0 +1,5 @@
+<p>Why do you want to join the group? (in less than 100 char)</p>
+<form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Send">
+</form>

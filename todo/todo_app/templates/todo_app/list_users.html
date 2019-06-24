@@ -1,0 +1,40 @@
+<h1>Users</h1>
+  <ul>
+    {% if user_list %}
+      {% for user in user_list %}
+        <li>
+          <p>{{user.username}}</p>
+          <p>User id: {{user.id}}</p>
+          {% if not user in already_su_list %}
+            <form action="{% url 'todo_app:todo_make_su' passed_group_id=passed_group_id passed_user_id=user.id%}" method="post">
+              {% csrf_token %}
+              <input type="submit" value="Make Group SU">
+            </form>
+          {% else %}
+            Group Super User
+          {% endif %}
+        </li>
+      {% endfor %}
+    {% endif %}
+  </ul>
+
+  <p>
+    <form action="{% url 'todo_app:todo_invite_group' passed_group_id=passed_group_id %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Invite User">
+    </form>
+  </p>
+
+<p>
+  <form action="{% url 'todo_app:todo_logout' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Logout">
+  </form>
+</p>
+
+<p>
+  <form action="{% url 'todo_app:todo_display_group' %}" method="get">
+    {% csrf_token %}
+    <input type="submit" value="View Groups" >
+  </form>
+</p>

@@ -1,0 +1,36 @@
+<p>{{ object.post_text }}</p>
+{% if object.image %}
+  <img src="{{ object.image.url }}">
+{% endif %}
+<p>Date Posted: {{ object.add_date }}</p>
+<p>Posted By: {{ object.owner.username }}</p>
+<p>Comments:</p>
+<ul>
+  {% if comment_list %}
+    {% for comment in comment_list %}
+      <li>
+        <p>{{ comment.text }}</p>
+        <p>{{ comment.date }} {{ comment.owner.username }}</p>
+        {% if comment.id in edit_perm %}
+          <form action="{% url 'todo_app:todo_edit_cmnt' pk=comment.pk post_pk=object.pk %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Edit">
+          </form>
+        {% endif %}
+        {% if comment.id in del_perm %}
+          <form action="{% url 'todo_app:todo_del_cmnt' pk=comment.pk post_pk=object.pk %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Delete">
+          </form>
+        {% endif %}
+      </li>
+    {% endfor %}
+  {% endif %}
+</ul>
+
+<p>
+  <form action="{% url 'todo_app:todo_add_cmnt' post_pk=object.pk %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Add Comment">
+  </form>
+</p>
